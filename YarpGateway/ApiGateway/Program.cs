@@ -19,10 +19,19 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
+builder.Services.AddOutputCache(options =>
+{
+    options.AddPolicy(
+        "CustomPolicy",
+        builder => builder.Expire(TimeSpan.FromSeconds(10)));
+});
+
 var app = builder.Build();
 
 app.MapReverseProxy();
 
 app.UseRateLimiter();
+
+app.UseOutputCache();
 
 await app.RunAsync();
