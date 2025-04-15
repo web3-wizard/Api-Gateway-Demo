@@ -2,7 +2,9 @@
     "Routes": [
         {
             "UpstreamPathTemplate": "/gateway/products/{everything}",
-            "UpstreamHttpMethod": [ "GET" ],
+            "UpstreamHttpMethod": [
+                "GET"
+            ],
             "DownstreamPathTemplate": "/api/products/{everything}",
             "DownstreamSchema": "http",
             "DownstreamHostAndPorts": [
@@ -10,7 +12,14 @@
                     "Host": "localhost",
                     "Port": "5321"
                 }
-            ]
+            ],
+            "RateLimitOptions": {
+                "ClientWhiteList": [],
+                "EnableRateLimiting": true,
+                "Period": "30s",
+                "PeriodTimespan": 10,
+                "Limit": 5
+            }
         }
     ],
     "GlobalConfiguration": {
