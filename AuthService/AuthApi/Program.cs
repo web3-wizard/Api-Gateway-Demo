@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddOpenApi();
+
 builder.Services.AddAuthentication()
     .AddCookie(IdentityConstants.ApplicationScheme)
     .AddBearerToken(IdentityConstants.BearerScheme);
@@ -24,6 +26,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.ApplyMigrations();
+
+    app.MapOpenApi();
+
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint("/openapi/v1.json","v1");
+    });
 }
 
 app.UseHttpsRedirection();

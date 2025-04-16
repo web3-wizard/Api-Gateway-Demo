@@ -11,6 +11,9 @@ public static class Extensions
 
         using AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        dbContext.Database.Migrate();
+        if (dbContext.Database.HasPendingModelChanges())
+        {
+            dbContext.Database.Migrate();
+        }
     }
 }
