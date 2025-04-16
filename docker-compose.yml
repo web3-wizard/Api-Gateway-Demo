@@ -8,7 +8,7 @@ services:
       - "8080:5325"
     depends_on:
       - product-service
-      # - review-service
+      - review-service
     networks:
       - app_network
 
@@ -20,13 +20,13 @@ services:
     networks:
       - app_network
 
-  # review-service:
-  #   image: app.demo/review-service:${TAG}
-  #   build:
-  #     context: ./ReviewService/
-  #     dockerfile: Dockerfile
-  #   networks:
-  #     - app_network
+  review-service:
+    image: app.demo/review-service:${TAG}
+    build:
+      context: ./ReviewService/
+      dockerfile: Dockerfile
+    networks:
+      - app_network
 
 
 networks:
