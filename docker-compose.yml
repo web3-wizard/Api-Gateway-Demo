@@ -1,0 +1,33 @@
+services:
+  yarp-gateway:
+    image: app.demo/yarp-gateway:${TAG}
+    build:
+      context: ./YarpGateway/
+      dockerfile: Dockerfile
+    ports:
+      - "8080:5325"
+    depends_on:
+      - products-service
+    networks:
+      - app_network
+
+  products-service:
+    image: app.demo/products-service:${TAG}
+    build:
+      context: ./ProductService/
+      dockerfile: Dockerfile
+    networks:
+      - app_network
+
+  products-service-two:
+    image: app.demo/products-service:${TAG}
+    build:
+      context: ./ProductService/
+      dockerfile: Dockerfile
+    networks:
+      - app_network
+
+
+networks:
+  app_network:
+    driver: bridge
