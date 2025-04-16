@@ -7,25 +7,26 @@ services:
     ports:
       - "8080:5325"
     depends_on:
-      - products-service
+      - product-service
+      # - review-service
     networks:
       - app_network
 
-  products-service:
-    image: app.demo/products-service:${TAG}
+  product-service:
+    image: app.demo/product-service:${TAG}
     build:
       context: ./ProductService/
       dockerfile: Dockerfile
     networks:
       - app_network
 
-  products-service-two:
-    image: app.demo/products-service:${TAG}
-    build:
-      context: ./ProductService/
-      dockerfile: Dockerfile
-    networks:
-      - app_network
+  # review-service:
+  #   image: app.demo/review-service:${TAG}
+  #   build:
+  #     context: ./ReviewService/
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - app_network
 
 
 networks:
