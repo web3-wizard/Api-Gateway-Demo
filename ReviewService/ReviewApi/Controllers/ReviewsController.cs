@@ -5,7 +5,9 @@ namespace ReviewApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReviewsController(ILogger<ReviewsController> logger) : ControllerBase
+public class ReviewsController(
+    ILogger<ReviewsController> logger,
+    IHttpClientFactory clientFactory) : ControllerBase
 {
     private readonly List<Review> _reviews = [
         new Review(
@@ -42,6 +44,50 @@ public class ReviewsController(ILogger<ReviewsController> logger) : ControllerBa
             var reviews = _reviews.Where(x => x.ProductId == productId).ToList();
             logger.LogInformation("Product Reviews Found. Reviews Count: {count}", reviews.Count);
             return Ok(reviews);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpGet]
+    [Route("{productId:int}/details")]
+    public async Task<IActionResult> GetDetails(int productId)
+    {
+        try
+        {
+            logger.LogInformation("Fetching Product details ....Product Id: {id}", productId);
+
+            var httpClient = clientFactory.CreateClient("HttpClient");
+            var response = await httpClient.GetAsync($"/gateway/products/{productId}");
+
+            if (response.IsSuccessStatusCode == false)
+            {
+                logger.LogError("Product fetched failed. Status Code: {code}", response.StatusCode);
+                return StatusCode((int)response.StatusCode);
+            }
+
+            var product = await response.Content.ReadFromJsonAsync<Product>();
+
+            if (product == null)
+            {
+                logger.LogWarning("Product not found. Product Id: {id}", productId);
+                return NotFound("Product with given id not found");
+            }
+            logger.LogInformation("Product fetched successfully. ID: {id}, Name: {name}", product.Id, product.Name);
+            logger.LogInformation("Fetching Product Reviews ....Product Id: {id}", productId);
+
+            await Task.Delay(250);
+            var reviews = _reviews.Where(x => x.ProductId == productId).ToList();
+
+            logger.LogInformation("Product Reviews Found. Reviews Count: {count}", reviews.Count);
+            return Ok(new
+            {
+                product,
+                reviews
+            });
         }
         catch (Exception ex)
         {

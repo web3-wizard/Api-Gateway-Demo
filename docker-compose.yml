@@ -1,6 +1,6 @@
 services:
   yarp-gateway:
-    image: app.demo/yarp-gateway:${TAG}
+    image: app.demo/yarp-gateway:latest
     build:
       context: ./YarpGateway/
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
       - app_network
 
   product-service:
-    image: app.demo/product-service:${TAG}
+    image: app.demo/product-service:latest
     build:
       context: ./ProductService/
       dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
       - app_network
 
   review-service:
-    image: app.demo/review-service:${TAG}
+    image: app.demo/review-service:latest
     build:
       context: ./ReviewService/
       dockerfile: Dockerfile
