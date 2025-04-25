@@ -34,12 +34,11 @@ public class ReviewsController(
 
     [HttpGet]
     [Route("{productId:int}")]
-    public async Task<IActionResult> Get(int productId)
+    public IActionResult Get(int productId)
     {
         try
         {
             logger.LogInformation("Fetching Product Reviews ....Product Id: {id}", productId);
-            await Task.Delay(500);
 
             var reviews = _reviews.Where(x => x.ProductId == productId).ToList();
             logger.LogInformation("Product Reviews Found. Reviews Count: {count}", reviews.Count);
@@ -47,7 +46,7 @@ public class ReviewsController(
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            logger.LogError(ex, ex.Message);
             return StatusCode(500, "Internal server error.");
         }
     }
@@ -79,7 +78,6 @@ public class ReviewsController(
             logger.LogInformation("Product fetched successfully. ID: {id}, Name: {name}", product.Id, product.Name);
             logger.LogInformation("Fetching Product Reviews ....Product Id: {id}", productId);
 
-            await Task.Delay(250);
             var reviews = _reviews.Where(x => x.ProductId == productId).ToList();
 
             logger.LogInformation("Product Reviews Found. Reviews Count: {count}", reviews.Count);
@@ -91,7 +89,7 @@ public class ReviewsController(
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            logger.LogError(ex, ex.Message);
             return StatusCode(500, "Internal server error.");
         }
     }

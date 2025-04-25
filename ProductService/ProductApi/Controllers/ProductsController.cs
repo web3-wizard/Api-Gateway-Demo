@@ -7,7 +7,7 @@ namespace ProductApi.Controllers;
 [Route("api/[controller]")]
 public class ProductsController(ILogger<ProductsController> logger) : ControllerBase
 {
-    private readonly List<Product> _products =[
+    private readonly List<Product> _products = [
         new Product( Id: 1,Name: "Samsung S23", Price: 39980.00, Stock: 5),
         new Product( Id: 2,Name: "Samsung Tab S9 FE Plus", Price: 29980.00, Stock: 8),
         new Product( Id: 3,Name: "Samsung Fold Z5", Price: 109980.00, Stock: 2),
@@ -28,7 +28,7 @@ public class ProductsController(ILogger<ProductsController> logger) : Controller
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            logger.LogError(ex, ex.Message);
             return StatusCode(500, "Internal server error.");
         }
     }
@@ -40,11 +40,10 @@ public class ProductsController(ILogger<ProductsController> logger) : Controller
         try
         {
             logger.LogInformation($"Start Fetching Product..... ID: {id}");
-            await Task.Delay(500);
 
             var product = _products.FirstOrDefault(x => x.Id == id);
 
-            if(product is null)
+            if (product is null)
             {
                 logger.LogWarning($"Product Not Found. ID: {id}");
                 return NotFound();
@@ -55,7 +54,7 @@ public class ProductsController(ILogger<ProductsController> logger) : Controller
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            logger.LogError(ex, ex.Message);
             return StatusCode(500, "Internal server error.");
         }
     }
